@@ -12,14 +12,15 @@ from langchain.chains import RetrievalQA
 from langchain import hub
 from langchain_community.embeddings import HuggingFaceEmbeddings  # Import the HuggingFaceEmbeddings class
 
+print()
+print("LOCAL RAG TEST STARTED - PULLING ALL TRANSCRIPTS FROM THE DATA FOLDER...")
+print()
+
 # Download NLTK data if needed
 # nltk.download('punkt')
 
 # Load the SpaCy model for NLP
 nlp = spacy.load("en_core_web_sm")
-
-# Get user question
-question = input("Please enter your question: ")
 
 # Define the directory containing the text files
 directory = "/Users/pisles/InfoWorldRAG/data"
@@ -33,6 +34,9 @@ for filename in os.listdir(directory):
         documents = loader.load()
         all_documents.extend(documents)
         print(f"Loaded file: {filename}")
+# Get user question
+print()
+question = input("What would you like to know about the transcripts? ")
 
 # Tokenize documents into sentences
 sentences = [sent_tokenize(doc.page_content) for doc in all_documents]
@@ -51,8 +55,11 @@ if os.path.exists(db_file_path):
     os.remove(db_file_path)
 db = SQLiteVSS.from_texts(texts=flat_sentences, embedding=embedding_model, table="state_union", db_file=db_file_path)
 
-# Initialize the language model with callbacks
-llm = Ollama(model="llama3", verbose=True, callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]))
+# Initialize the callback manager with the StreamingStdOutCallbackHandler
+callback_manager = CallbackManager([StreamingStdOutCallbackHandler()])
+
+# Initialize the language model with the single callback handler
+llm = Ollama(model="llama3", verbose=True, callback_manager=callback_manager)
 
 # Get user query and process it
 doc = nlp(question)
@@ -60,7 +67,9 @@ entities = [ent.text for ent in doc.ents]
 keywords = [token.lemma_ for token in doc if not token.is_stop and token.is_alpha]
 
 # Use the LangChain hub to get the QA prompt
+# https://smith.langchain.com/hub/pisles/rag-prompt-llama-ps/playground
 QA_CHAIN_PROMPT = hub.pull("pisles/rag-prompt-llama-ps")
+#print(QA_CHAIN_PROMPT)
 
 # Define the QA chain
 qa_chain = RetrievalQA.from_chain_type(
@@ -75,3 +84,4 @@ cleaned_result = result.get('result', '').replace('[INST]', '').replace('[/INST]
 
 # Print the results
 print(cleaned_result)
+print()
