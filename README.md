@@ -19,8 +19,6 @@ Requires Python 3.x, `nltk`, `spacy`, `langchain`, `langchain_community`. Instal
 Run the script, input a question, and get an answer.
 
 ### Example
-```bash
-$ python local_rag.py
-> What would you like to know about the transcripts?
-> Who mentioned climate change?
-"Several politicians mentioned climate change during the speeches..."
+
+$ python LocalRag-set-prompt-embed-NLP.py
+
