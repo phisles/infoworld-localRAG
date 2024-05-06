@@ -11,19 +11,21 @@ from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.chains import RetrievalQA
 from langchain import hub
 from langchain_community.embeddings import HuggingFaceEmbeddings  # Import the HuggingFaceEmbeddings class
+from langchain_community.output_parsers.rail_parser import GuardrailsOutputParser
+
 
 print()
 print("LOCAL RAG TEST STARTED - PULLING ALL TRANSCRIPTS FROM THE DATA FOLDER...")
 print()
 
 # Download NLTK data if needed
-# nltk.download('punkt')
+nltk.download('punkt')
 
 # Load the SpaCy model for NLP
 nlp = spacy.load("en_core_web_sm")
 
 # Define the directory containing the text files
-directory = "/Users/pisles/InfoWorldRAG/data"
+directory = "/Users/philip/Desktop/Code/InfoWorldRAG/data"
 all_documents = []
 
 # Load documents
