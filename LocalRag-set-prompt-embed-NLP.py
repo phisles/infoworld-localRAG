@@ -13,6 +13,9 @@ from langchain import hub
 from langchain_community.embeddings import HuggingFaceEmbeddings  # Import the HuggingFaceEmbeddings class
 from langchain_community.output_parsers.rail_parser import GuardrailsOutputParser
 
+#import sqlite3
+#print(dir(sqlite3.Connection))  # Check if 'enable_load_extension' is listed among the attributes
+
 
 print()
 print("LOCAL RAG TEST STARTED - PULLING ALL TRANSCRIPTS FROM THE DATA FOLDER...")
